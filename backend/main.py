@@ -10,6 +10,7 @@ from app.document_routes import router as document_router
 from app.analytics_routes import router as analytics_router
 
 FRONTEND_DIST = Path(__file__).resolve().parents[1] / "frontend" / "dist"
+API_PATH_PREFIXES = ("auth", "documents", "analytics", "health", "upload", "ask", "ask_question")
 
 ensure_database_schema()
 Base.metadata.create_all(bind=engine)
@@ -67,6 +68,12 @@ async def ask_legacy(question: str):
 
 @app.get("/{frontend_path:path}", include_in_schema=False)
 def serve_frontend(frontend_path: str):
+    if any(
+        frontend_path == prefix or frontend_path.startswith(f"{prefix}/")
+        for prefix in API_PATH_PREFIXES
+    ):
+        raise HTTPException(status_code=404, detail="Not Found")
+
     index_path = FRONTEND_DIST / "index.html"
     if not index_path.is_file():
         raise HTTPException(status_code=404, detail="Not Found")

@@ -10,7 +10,7 @@ import jwt
 from fastapi.testclient import TestClient
 from pypdf import PdfWriter
 
-from main import app
+from main import FRONTEND_DIST, app
 from app.security import ALGORITHM, SECRET_KEY
 
 
@@ -52,6 +52,24 @@ def test_malformed_token_subject_returns_unauthorized():
     response = client.get("/auth/me", headers={"Authorization": f"Bearer {token}"})
 
     assert response.status_code == 401
+
+
+def test_unmatched_api_paths_return_json_without_breaking_spa_fallback():
+    for path in (
+        "/auth/not-a-route",
+        "/documents/not-a-route/unknown",
+        "/analytics/not-a-route",
+        "/health/not-a-route",
+    ):
+        response = client.get(path)
+
+        assert response.status_code == 404, path
+        assert response.headers["content-type"].startswith("application/json"), path
+
+    if (FRONTEND_DIST / "index.html").is_file():
+        response = client.get("/dashboard")
+        assert response.status_code == 200
+        assert response.headers["content-type"].startswith("text/html")
 
 
 def test_empty_text_document_does_not_break_analytics():
