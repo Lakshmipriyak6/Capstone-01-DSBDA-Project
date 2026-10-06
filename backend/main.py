@@ -5,7 +5,6 @@ from app.auth_routes import router as auth_router
 from app.database import Base, ensure_database_schema, engine
 from app.document_routes import router as document_router
 from app.analytics_routes import router as analytics_router
-from app.dataset_routes import router as dataset_router
 
 ensure_database_schema()
 Base.metadata.create_all(bind=engine)
@@ -23,7 +22,6 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(document_router)
 app.include_router(analytics_router)
-app.include_router(dataset_router)
 
 
 @app.get("/")

@@ -16,10 +16,6 @@ export default function InsightsPage() {
   const [outliers, setOutliers] = useState(null);
   const [activity, setActivity] = useState(null);
   const [analyticsError, setAnalyticsError] = useState("");
-  const [datasetQuery, setDatasetQuery] = useState('');
-  const [datasetResults, setDatasetResults] = useState(null);
-  const [datasetLoading, setDatasetLoading] = useState(false);
-  const [datasetError, setDatasetError] = useState(null);
   const fgRef = useRef();
 
   useEffect(() => {
@@ -50,22 +46,6 @@ export default function InsightsPage() {
     } catch (err) {
       console.error("Analytics fetch failed:", err);
       setAnalyticsError(err?.response?.data?.detail || "Analytics could not be loaded. Please try again.");
-    }
-  };
-
-  const runDatasetSearch = async (q) => {
-    if (!q) return;
-    setDatasetLoading(true);
-    setDatasetError(null);
-    try {
-      const res = await api.get('/dataset/search', { params: { q, top_k: 5 } });
-      setDatasetResults(res.data.results || []);
-    } catch (err) {
-      console.error('Dataset search failed', err);
-      setDatasetError(err?.response?.data?.detail || err.message || 'Search failed');
-      setDatasetResults([]);
-    } finally {
-      setDatasetLoading(false);
     }
   };
 
@@ -243,30 +223,6 @@ export default function InsightsPage() {
             />
           </div>
         ) : <div className="empty-state">No graph data. Upload documents to generate a knowledge graph.</div>}
-      </section>
-
-      <section className="panel">
-        <h3>Dataset Intelligence</h3>
-        <p className="muted">Search the bundled dataset (needs authentication) for relevant context, questions and answers.</p>
-        <div style={{display:'flex', gap:8, marginBottom:12}}>
-          <input value={datasetQuery} onChange={e=>setDatasetQuery(e.target.value)} placeholder="Enter keyword or question" style={{flex:1,padding:'8px'}} />
-          <button className="btn" onClick={()=>runDatasetSearch(datasetQuery)} disabled={datasetLoading}>{datasetLoading? 'Searching...':'Search'}</button>
-        </div>
-        {datasetError && <div className="error">{datasetError}</div>}
-        {datasetResults && datasetResults.length ? (
-          <div className="dataset-results">
-            {datasetResults.map((r, i) => (
-              <div key={i} className="result-card">
-                <div className="result-score">{(r.score||0).toFixed(1)}</div>
-                <div className="result-body">
-                  <div className="result-question"><strong>Q:</strong> {r.question}</div>
-                  <div className="result-answer"><strong>A:</strong> {r.answer}</div>
-                  <div className="result-context muted">{r.context}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (datasetResults && datasetResults.length===0 ? <div className="empty-state">No matching results</div> : null)}
       </section>
 
       <section className="panel-grid">
