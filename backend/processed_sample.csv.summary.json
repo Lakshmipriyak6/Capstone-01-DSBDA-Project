@@ -1,0 +1,11 @@
+{
+  "input_path": "dataset/DocuMind_AI_SQuAD2_Dataset.csv",
+  "output_path": "backend/processed_sample.csv",
+  "sample_size_requested": 2000,
+  "sampled_rows": 2000,
+  "candidate_rows_seen": 130319,
+  "columns": [
+    "context",
+    "question"
+  ]
+}

@@ -1,0 +1,70 @@
+:root {
+  font-family: Inter, "Segoe UI", sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #0f172a;
+  background: linear-gradient(135deg, #eef2ff 0%, #f8fafc 100%);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body[data-theme='light'] {
+  --bg-base: #f8fafc;
+  --bg-panel: rgba(255, 255, 255, 0.82);
+  --text: #0f172a;
+  --muted: #475569;
+  --border: rgba(148, 163, 184, 0.22);
+  --shadow: rgba(15, 23, 42, 0.08);
+}
+
+body[data-theme='dark'] {
+  --bg-base: #0f172a;
+  --bg-panel: rgba(15, 23, 42, 0.8);
+  --text: #e2e8f0;
+  --muted: #cbd5e1;
+  --border: rgba(148, 163, 184, 0.22);
+  --shadow: rgba(2, 6, 23, 0.7);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg-base);
+  color: var(--text);
+}
+
+#root {
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+}
+
+input,
+button {
+  font: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+p {
+  margin-top: 0;
+}
+
+button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}

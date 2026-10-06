@@ -1,0 +1,19 @@
+.app-shell {
+  min-height: 100vh;
+}
+
+.button {
+  border: none;
+  border-radius: 12px;
+  padding: 0.8rem 1.2rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* backup of App.css */

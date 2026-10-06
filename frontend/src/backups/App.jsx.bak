@@ -1,0 +1,79 @@
+import { useEffect, useMemo, useState } from "react";
+import { BrowserRouter, Link, NavLink, Navigate, Route, Routes, useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import "./App.css";
+import InsightsPage from "./pages/Insights";
+import SettingsPage from "./pages/Settings";
+
+const API_URL = "http://127.0.0.1:8000";
+
+const api = axios.create({
+  baseURL: API_URL,
+});
+
+const setAuthToken = (token) => {
+  if (token) {
+    api.defaults.headers.common.Authorization = `Bearer ${token}`;
+    localStorage.setItem("documind_token", token);
+  } else {
+    delete api.defaults.headers.common.Authorization;
+    localStorage.removeItem("documind_token");
+  }
+};
+
+function App() {
+  const [token, setToken] = useState(localStorage.getItem("documind_token") || "");
+  const [theme, setTheme] = useState(localStorage.getItem("documind_theme") || "light");
+
+  useEffect(() => {
+    setAuthToken(token);
+  }, [token]);
+
+  useEffect(() => {
+    document.body.dataset.theme = theme;
+    localStorage.setItem("documind_theme", theme);
+  }, [theme]);
+
+  return (
+    <BrowserRouter>
+      <div className="app-shell">
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<LoginPage setToken={setToken} />} />
+          <Route path="/register" element={<RegisterPage setToken={setToken} />} />
+          <Route path="/dashboard" element={<ProtectedRoute token={token}><DashboardPage token={token} setToken={setToken} theme={theme} setTheme={setTheme} /></ProtectedRoute>} />
+          <Route path="/documents" element={<ProtectedRoute token={token}><DocumentsPage token={token} setToken={setToken} theme={theme} setTheme={setTheme} /></ProtectedRoute>} />
+          <Route path="/documents/:documentId" element={<ProtectedRoute token={token}><DocumentDetailPage token={token} setToken={setToken} theme={theme} setTheme={setTheme} /></ProtectedRoute>} />
+          <Route path="/ask-ai" element={<ProtectedRoute token={token}><ComingSoonPage title="Ask AI" description="AI-assisted document Q&A is being prepared for the next stage." token={token} setToken={setToken} theme={theme} setTheme={setTheme} /></ProtectedRoute>} />
+          <Route path="/insights" element={<ProtectedRoute token={token}><InsightsPage token={token} setToken={setToken} theme={theme} setTheme={setTheme} /></ProtectedRoute>} />
+          <Route path="/settings" element={<ProtectedRoute token={token}><SettingsPage theme={theme} setTheme={setTheme} /></ProtectedRoute>} />
+          <Route path="/study" element={<ProtectedRoute token={token}><ComingSoonPage title="Study Mode" description="Summaries, flashcards, and quiz generation are planned for the upcoming stage." token={token} setToken={setToken} theme={theme} setTheme={setTheme} /></ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute token={token}><ProfilePage token={token} setToken={setToken} theme={theme} setTheme={setTheme} /></ProtectedRoute>} />
+          <Route path="*" element={<Navigate to={token ? "/dashboard" : "/login"} replace />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
+  );
+}
+
+function ProtectedRoute({ token, children }) {
+  return token ? children : <Navigate to="/login" replace />;
+}
+
+function formatDate(dateString) {
+  if (!dateString) return "—";
+  return new Date(dateString).toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+function formatFileSize(bytes) {
+  if (!bytes) return "0 KB";
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+}
+
+/* ...rest omitted for brevity in backup... */

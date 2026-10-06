@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+sqlalchemy
+pypdf
+scikit-learn
+numpy
+python-multipart
+passlib
+pyjwt
+requests
+sentence-transformers
+faiss-cpu

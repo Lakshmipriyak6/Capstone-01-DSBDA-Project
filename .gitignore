@@ -1,0 +1,41 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.py[cod]
+.pytest_cache/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Node
+node_modules/
+frontend/dist/
+backend/uploads/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python tools
+*.egg-info/
+
+# Logs
+*.log
+
+# Temporary development files
+/app_check.txt
+/app_mod*.txt
+/frontend_index.html
+/insights_mod.txt
+/main_jsx.txt
+/served_app*.jsx
+/served_main*.jsx
+/tmp_*.html
+/tmp_*.js
